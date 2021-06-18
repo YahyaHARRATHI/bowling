@@ -51,9 +51,7 @@ public class BowlingTest {
             game.roll("/");
             game.roll("/");
         }
-        int status = SystemLambda.catchSystemExit(() -> {
-            game.getScore();
-        });
+        int status = SystemLambda.catchSystemExit(() -> game.getScore());
         assertEquals(1, status);
     }
 
@@ -65,9 +63,7 @@ public class BowlingTest {
             game.roll("/");
             game.roll("/");
         }
-        int status = SystemLambda.catchSystemExit(() -> {
-            game.getScore();
-        });
+        int status = SystemLambda.catchSystemExit(() -> game.getScore());
         assertEquals(1, status);
     }
 
@@ -79,9 +75,7 @@ public class BowlingTest {
             game.roll("9");
             game.roll("9");
         }
-        int status = SystemLambda.catchSystemExit(() -> {
-            game.getScore();
-        });
+        int status = SystemLambda.catchSystemExit(() -> game.getScore());
         assertEquals(1, status);
     }
 
@@ -93,9 +87,7 @@ public class BowlingTest {
             game.roll("9");
             game.roll("9");
         }
-        int status = SystemLambda.catchSystemExit(() -> {
-            game.getScore();
-        });
+        int status = SystemLambda.catchSystemExit(() -> game.getScore());
         assertEquals(1, status);
     }
 
@@ -107,16 +99,17 @@ public class BowlingTest {
         game.roll("X");
         game.roll("2");
         game.roll("/");
+        game.roll("X");
+        game.roll("X");
         game.roll("6");
         game.roll("6");
-        game.roll("6");
-        game.roll("6");
-        game.roll("6");
-        game.roll("6");
+        game.roll("3");
+        game.roll("3");
+        game.roll("X");
+        game.roll("2");
+        game.roll("-");
 
-        int status = SystemLambda.catchSystemExit(() -> {
-            game.getScore();
-        });
+        int status = SystemLambda.catchSystemExit(() -> game.getScore());
         assertEquals(1, status);
     }
 

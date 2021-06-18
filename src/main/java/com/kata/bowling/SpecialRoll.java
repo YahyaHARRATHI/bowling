@@ -13,8 +13,4 @@ public enum SpecialRoll {
     public String getName() {
         return name;
     }
-
-    public void setName(String score) {
-        this.name = score;
-    }
 }
