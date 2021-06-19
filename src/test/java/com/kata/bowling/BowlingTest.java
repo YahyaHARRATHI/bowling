@@ -113,5 +113,28 @@ public class BowlingTest {
         assertEquals(1, status);
     }
 
+    @Test
+    public void testCheckRollsWithInvalidNumberOfFrames() throws Exception {
+        game.roll("9");
+        game.roll("-");
+        game.roll("X");
+        game.roll("X");
+        game.roll("2");
+        game.roll("/");
+        game.roll("X");
+        game.roll("X");
+        game.roll("3");
+        game.roll("3");
+        game.roll("3");
+        game.roll("3");
+        game.roll("X");
+        game.roll("2");
+        game.roll("-");
+        game.roll("2");
+
+        int status = SystemLambda.catchSystemExit(() -> game.getScore());
+        assertEquals(1, status);
+    }
+
 
 }

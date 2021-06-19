@@ -1,6 +1,7 @@
 package main.java.com.kata.bowling;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 import static main.java.com.kata.bowling.Utils.getIntValue;
@@ -21,13 +22,14 @@ public class Game {
             else if (SpecialRoll.MISS.getName().equals(r))
                 return "0";
             return r;
-        }).toArray(String[]::new);
+        }).filter(Objects::nonNull).toArray(String[]::new);
         checkRolls(rolls, rollIndex);
         checkFrames(rolls, rollIndex);
         int score = 0;
         int frameIndex = 0;
+        int finalFrameRolls = 0;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             if (isStrike(frameIndex)) {
                 score += 10 + strike(frameIndex);
                 frameIndex++;
@@ -39,7 +41,28 @@ public class Game {
                 frameIndex += 2;
             }
         }
+        if (isStrike(frameIndex)) {
+            score += 10 + strike(frameIndex);
+            frameIndex++;
+            finalFrameRolls = 2;
+        } else if (isSpare(frameIndex)) {
+            score += 10 + spare(frameIndex);
+            frameIndex += 2;
+            finalFrameRolls = 1;
+        } else {
+            score += frameScore(frameIndex);
+            frameIndex += 2;
+        }
+        checkExtraRolls(frameIndex, finalFrameRolls);
         return score;
+    }
+
+    private void checkExtraRolls(int frameIndex, int finalFrameRolls) {
+        if (frameIndex < rollIndex - finalFrameRolls) {
+            System.out.println("There still extra rolls; Invalid rolls");
+            System.exit(1);
+
+        }
     }
 
     private void checkFrames(String[] rolls, int rollIndex) {
