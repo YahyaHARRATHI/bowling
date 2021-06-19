@@ -1,5 +1,7 @@
 package main.java.com.kata.bowling;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -15,21 +17,18 @@ public class Game {
         rolls[rollIndex++] = pins;
     }
 
-    public int getScore() {
-        rolls = Arrays.stream(rolls).map(r -> {
-            if (SpecialRoll.STRIKE.getName().equals(r))
-                return "10";
-            else if (SpecialRoll.MISS.getName().equals(r))
-                return "0";
-            return r;
-        }).filter(Objects::nonNull).toArray(String[]::new);
+    public Pair<Integer, Frame[]> getScore(int numberOfFrames) {
+        mapRolls();
         checkRolls(rolls, rollIndex);
         checkFrames(rolls, rollIndex);
         int score = 0;
         int frameIndex = 0;
         int finalFrameRolls = 0;
-
-        for (int i = 0; i < 9; i++) {
+        Frame frame;
+        Frame[] framesScore = new Frame[10];
+        for (int i = 0; i < numberOfFrames - 1; i++) {
+            frame = new Frame();
+            frame.setFrame(i + 1);
             if (isStrike(frameIndex)) {
                 score += 10 + strike(frameIndex);
                 frameIndex++;
@@ -40,7 +39,12 @@ public class Game {
                 score += frameScore(frameIndex);
                 frameIndex += 2;
             }
+            frame.setScore(score);
+            framesScore[i] = frame;
         }
+        //Final frame
+        frame = new Frame();
+        frame.setFrame(numberOfFrames);
         if (isStrike(frameIndex)) {
             score += 10 + strike(frameIndex);
             frameIndex++;
@@ -53,8 +57,20 @@ public class Game {
             score += frameScore(frameIndex);
             frameIndex += 2;
         }
+        frame.setScore(score);
+        framesScore[numberOfFrames - 1] = frame;
         checkExtraRolls(frameIndex, finalFrameRolls);
-        return score;
+        return Pair.of(score, framesScore);
+    }
+
+    private void mapRolls() {
+        rolls = Arrays.stream(rolls).map(r -> {
+            if (SpecialRoll.STRIKE.getName().equals(r))
+                return "10";
+            else if (SpecialRoll.MISS.getName().equals(r))
+                return "0";
+            return r;
+        }).filter(Objects::nonNull).toArray(String[]::new);
     }
 
     private void checkExtraRolls(int frameIndex, int finalFrameRolls) {
@@ -80,10 +96,6 @@ public class Game {
     }
 
     private void checkRolls(String[] rolls, int rollIndex) {
-        if (rollIndex < 11) {
-            System.out.println("Min number of rolls is 11");
-            System.exit(1);
-        }
         for (int i = 0; i < rollIndex; i++) {
             String roll = rolls[i];
             if (i == 0 && SpecialRoll.SPARE.getName().equals(rolls[0])) {
